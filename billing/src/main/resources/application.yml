@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: billing
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/billing
+    username: postgres
+    password: postgres
+
+server:
+  port: 8200

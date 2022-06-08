@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: notification
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/notification
+    username: postgres
+    password: postgres
+
+server:
+  port: 8400

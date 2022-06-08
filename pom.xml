@@ -22,4 +22,12 @@
         <java.version>17</java.version>
     </properties>
 
+    <modules>
+        <module>gateway</module>
+        <module>user</module>
+        <module>billing</module>
+        <module>order</module>
+        <module>notification</module>
+    </modules>
+
 </project>

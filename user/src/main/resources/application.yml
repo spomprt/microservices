@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: user
+
+  datasource:
+    url: jdbc:postgresql://localhost:5431/user
+    username: postgres
+    password: postgres
+
+server:
+  port: 8100

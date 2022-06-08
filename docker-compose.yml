@@ -2,6 +2,34 @@ version: '3.1'
 
 services:
 
+  user:
+    build:
+      context: user
+      dockerfile: Dockerfile
+    image: user:latest
+    depends_on:
+      - user-db
+    ports:
+      - "8100:8100"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/user
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+  
+  billing:
+    build:
+      context: billing
+      dockerfile: Dockerfile
+    image: billing:latest
+    depends_on:
+      - billing-db
+    ports:
+      - "8200:8200"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://billing-db:5432/billing
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
   order:
     build:
       context: order
@@ -10,25 +38,57 @@ services:
     depends_on:
       - order-db
     ports:
-      - "8010:8010"
+      - "8300:8300"
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://order-db:5432/order
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-  
-  product:
+
+  notification:
     build:
-      context: product
+      context: notification
       dockerfile: Dockerfile
-    image: product:latest
+    image: notification:latest
     depends_on:
-      - product-db
+      - notification-db
     ports:
-      - "8020:8020"
+      - "8400:8400"
     restart: always
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://product-db:5432/product
+      SPRING_DATASOURCE_URL: jdbc:postgresql://notification-db:5432/notification
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+  user-db:
+    image: postgres:14.2
+    restart: always
+    volumes:
+      - ./container-data/user-data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_DB: user
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+
+  billing-db:
+    image: postgres:14.2
+    restart: always
+    volumes:
+      - ./container-data/billing-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: billing
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
 
   order-db:
     image: postgres:14.2
@@ -46,15 +106,15 @@ services:
       - "-c"
       - "wal_level=logical"
 
-  product-db:
+  notification-db:
     image: postgres:14.2
     restart: always
     volumes:
-      - ./container-data/product-data:/var/lib/postgresql/data
+      - ./container-data/notification-data:/var/lib/postgresql/data
     ports:
       - "5434:5432"
     environment:
-      POSTGRES_DB: product
+      POSTGRES_DB: notification
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     command:
