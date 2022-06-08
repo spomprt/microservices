@@ -6,13 +6,12 @@ import com.spomprt.user.controller.dto.UserUpdateDto;
 import com.spomprt.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@Validated
 @RestController
 @RequestMapping("user")
 @RequiredArgsConstructor
@@ -46,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping
-    public void createUser(@RequestBody UserCreateDto userCreateDto) {
+    public void createUser(@Valid @RequestBody UserCreateDto userCreateDto) {
         log.info(">> Create user - {}", userCreateDto);
         userService.create(userCreateDto);
     }
