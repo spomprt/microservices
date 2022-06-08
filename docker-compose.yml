@@ -2,61 +2,70 @@ version: '3.1'
 
 services:
 
-  user:
-    build:
-      context: user
-      dockerfile: Dockerfile
-    image: user:latest
-    depends_on:
-      - user-db
-    ports:
-      - "8100:8100"
-    restart: always
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/user
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-  
-  billing:
-    build:
-      context: billing
-      dockerfile: Dockerfile
-    image: billing:latest
-    depends_on:
-      - billing-db
-    ports:
-      - "8200:8200"
-    restart: always
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://billing-db:5432/billing
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-
-  order:
-    build:
-      context: order
-      dockerfile: Dockerfile
-    image: order:latest
-    depends_on:
-      - order-db
-    ports:
-      - "8300:8300"
-    restart: always
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://order-db:5432/order
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-
-  notification:
-    build:
-      context: notification
-      dockerfile: Dockerfile
-    image: notification:latest
-    depends_on:
-      - notification-db
-    ports:
-      - "8400:8400"
-    restart: always
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://notification-db:5432/notification
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#  gateway:
+#    build:
+#      context: gateway
+#      dockerfile: Dockerfile
+#    image: gateway:latest
+#    ports:
+#      - "8888:8888"
+#    restart: always
+#
+#  user:
+#    build:
+#      context: user
+#      dockerfile: Dockerfile
+#    image: user:latest
+#    depends_on:
+#      - user-db
+#    ports:
+#      - "8100:8100"
+#    restart: always
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/user
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#
+#  billing:
+#    build:
+#      context: billing
+#      dockerfile: Dockerfile
+#    image: billing:latest
+#    depends_on:
+#      - billing-db
+#    ports:
+#      - "8200:8200"
+#    restart: always
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://billing-db:5432/billing
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#
+#  order:
+#    build:
+#      context: order
+#      dockerfile: Dockerfile
+#    image: order:latest
+#    depends_on:
+#      - order-db
+#    ports:
+#      - "8300:8300"
+#    restart: always
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://order-db:5432/order
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#
+#  notification:
+#    build:
+#      context: notification
+#      dockerfile: Dockerfile
+#    image: notification:latest
+#    depends_on:
+#      - notification-db
+#    ports:
+#      - "8400:8400"
+#    restart: always
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://notification-db:5432/notification
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
 
   user-db:
     image: postgres:14.2
@@ -152,7 +161,10 @@ services:
       - "8083:8083"
     links:
       - kafka
-      - pr
+      - user-db
+      - billing-db
+      - order-db
+      - notification-db
     environment:
       - BOOTSTRAP_SERVERS=kafka:9092
       - GROUP_ID=1
