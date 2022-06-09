@@ -7,5 +7,10 @@ spring:
     username: postgres
     password: postgres
 
+  liquibase:
+    change-log: db.changelog/db.changelog-master.yml
+  kafka:
+    bootstrap-servers: kafka:9092
+
 server:
   port: 8200

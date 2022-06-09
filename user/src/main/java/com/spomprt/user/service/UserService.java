@@ -1,14 +1,19 @@
 package com.spomprt.user.service;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spomprt.user.aggregate.Event;
+import com.spomprt.user.aggregate.EventTypes;
 import com.spomprt.user.aggregate.User;
 import com.spomprt.user.controller.dto.UserCreateDto;
 import com.spomprt.user.controller.dto.UserDto;
 import com.spomprt.user.controller.dto.UserUpdateDto;
+import com.spomprt.user.repository.EventRepository;
 import com.spomprt.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -19,6 +24,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final ObjectMapper objectMapper;
+    private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
     public List<UserDto> findAll() {
@@ -49,6 +55,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void create(UserCreateDto userCreateDto) {
 
         if (userRepository.existsById(userCreateDto.getUsername())) {
@@ -58,5 +65,16 @@ public class UserService {
         User user = objectMapper.convertValue(userCreateDto, User.class);
 
         userRepository.save(user);
+
+        JsonNode userCreatePayload = objectMapper.valueToTree(userCreateDto);
+
+        Event command = Event.builder()
+                .aggregateid(userCreateDto.getUsername())
+                .aggregatetype(User.class.getSimpleName())
+                .type(EventTypes.USER_CREATED_EVENT)
+                .payload(userCreatePayload)
+                .build();
+
+        eventRepository.save(command);
     }
 }

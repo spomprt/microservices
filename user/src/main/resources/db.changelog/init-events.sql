@@ -5,9 +5,7 @@
     type          | character varying(255) | not null
     payload       | jsonb                  |
  */
-
-
-create table command
+create table event
 (
     id            uuid         not null,
     aggregatetype varchar(255) not null,

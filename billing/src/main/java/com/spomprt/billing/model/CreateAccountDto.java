@@ -1,18 +1,13 @@
-package com.spomprt.orchestrator.command;
+package com.spomprt.billing.model;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
-public class UserCreateCommand {
-
-    @NotBlank
+public class CreateAccountDto {
     private String username;
     private String password;
     private String email;
     private String firstName;
     private String lastName;
     private String phone;
-
 }

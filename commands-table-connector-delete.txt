@@ -1,1 +1,1 @@
-curl -X DELETE http://localhost:8083/connectors/orchestrator-outbox-connector
+curl -X DELETE http://localhost:8083/connectors/user-outbox-connector

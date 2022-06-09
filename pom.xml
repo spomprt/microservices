@@ -37,7 +37,6 @@
 
     <modules>
         <module>gateway</module>
-        <module>orchestrator</module>
         <module>user</module>
         <module>billing</module>
         <module>order</module>

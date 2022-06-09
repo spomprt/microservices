@@ -1,3 +1,5 @@
 databaseChangeLog:
     - include:
           file: db.changelog/init-users.sql
+    - include:
+          file: db.changelog/init-events.sql

@@ -9,9 +9,6 @@ spring:
 
   liquibase:
     change-log: db.changelog/db.changelog-master.yml
-  kafka:
-    bootstrap-servers: 127.17.0.1:9092
-
 
 server:
   port: 8100

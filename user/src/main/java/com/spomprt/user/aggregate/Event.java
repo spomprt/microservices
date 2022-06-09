@@ -1,4 +1,4 @@
-package com.spomprt.orchestrator.aggregate;
+package com.spomprt.user.aggregate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
@@ -13,16 +13,16 @@ import java.util.UUID;
 
 @Builder
 @Getter
-@Setter()
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "command")
+@Table(name = "event")
 @TypeDefs({
         @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 })
-public class Command {
+public class Event {
 
     @Id
     @GeneratedValue(generator = "UUID")
