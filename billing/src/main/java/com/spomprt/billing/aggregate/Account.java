@@ -2,6 +2,7 @@ package com.spomprt.billing.aggregate;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -22,7 +23,8 @@ public class Account {
 
     private String lastName;
 
-    private Long bank;
+    @Column(name = "bank")
+    private long bank;
 
     public void putToBank(Long money) {
         this.bank += money;
