@@ -11,19 +11,19 @@ services:
 #      - "8888:8888"
 #    restart: always
 #
-#  user:
-#    build:
-#      context: user
-#      dockerfile: Dockerfile
-#    image: user:latest
-#    depends_on:
-#      - user-db
-#    ports:
-#      - "8100:8100"
-#    restart: always
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/user
-#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+  user:
+    build:
+      context: user
+      dockerfile: Dockerfile
+    image: user:latest
+    depends_on:
+      - user-db
+    ports:
+      - "8100:8100"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/user
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
 #
 #  billing:
 #    build:
@@ -66,6 +66,20 @@ services:
 #    environment:
 #      SPRING_DATASOURCE_URL: jdbc:postgresql://notification-db:5432/notification
 #      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#
+  orchestrator:
+    build:
+      context: orchestrator
+      dockerfile: Dockerfile
+    image: orchestrator:latest
+    depends_on:
+      - orchestrator-db
+    ports:
+      - "8500:8500"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://orchestrator-db:5432/orchestrator
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
 
   user-db:
     image: postgres:14.2
@@ -131,6 +145,22 @@ services:
       - "-c"
       - "wal_level=logical"
 
+  orchestrator-db:
+    image: postgres:14.2
+    restart: always
+    volumes:
+      - ./container-data/orchestrator-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: orchestrator
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+
   portainer:
     image: portainer/portainer-ce:2.11.1-alpine
     volumes:
@@ -165,6 +195,7 @@ services:
       - billing-db
       - order-db
       - notification-db
+      - orchestrator-db
     environment:
       - BOOTSTRAP_SERVERS=kafka:9092
       - GROUP_ID=1

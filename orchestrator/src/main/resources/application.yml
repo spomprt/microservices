@@ -1,17 +1,14 @@
 spring:
   application:
-    name: user
+    name: orchestrator
 
   datasource:
-    url: jdbc:postgresql://localhost:5431/user
+    url: jdbc:postgresql://localhost:5435/orchestrator
     username: postgres
     password: postgres
 
   liquibase:
     change-log: db.changelog/db.changelog-master.yml
-  kafka:
-    bootstrap-servers: 127.17.0.1:9092
-
 
 server:
-  port: 8100
+  port: 8500
